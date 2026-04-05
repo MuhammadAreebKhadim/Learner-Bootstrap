@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learner - Online Courses</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary-color: #0d6efd;
+            --secondary-color: #444444;
+            --light-bg: #f3f5fa;
+            --text-color: #555555;
+            --heading-color: #37517e;
+            --header-bg: rgba(255, 255, 255, 0.95);
+        }
+
+        body { font-family: 'Roboto', sans-serif; color: var(--text-color); }
+        h1, h2, h3, h4, h5, h6 { font-family: 'Poppins', sans-serif; color: var(--heading-color); }
+        a { text-decoration: none; }
+        
+        /* Navbar */
+        .navbar { padding: 15px 0; transition: all 0.5s; background: var(--header-bg); border-bottom: 1px solid #ddd; }
+        .navbar-brand { font-size: 28px; margin-right: 40px; font-weight: 700; color: var(--primary-color) !important; font-family: 'Poppins', sans-serif; letter-spacing: 1px;}
+        .nav-link { color: var(--secondary-color); font-weight: 500; font-size: 15px; margin: 0 10px; transition: 0.3s; padding: 10px 0;}
+        .nav-link:hover, .nav-link.active { color: var(--primary-color); }
+        .btn-get-started { margin-left: 30px; border-radius: 50px; padding: 10px 25px; white-space: nowrap; transition: 0.3s; font-size: 14px; font-weight: 600; background: var(--primary-color); color: white;}
+        .btn-get-started:hover { background: #0b5ed7; color: white; }
+
+        /* Hero */
+        .hero { padding: 120px 0 60px; background: url('data:image/svg+xml;utf8,<svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"><circle cx="100%" cy="40%" r="50%" fill="%23f3f5fa" opacity="0.6"/></svg>') no-repeat right top; }
+        .hero h1 { font-size: 48px; font-weight: 700; line-height: 1.2; margin-bottom: 20px; color: #222222; }
+        .hero p { font-size: 18px; margin-bottom: 30px; color: #444; }
+        .hero .btn-get-started-alt { border-radius: 50px; padding: 12px 30px; background: var(--primary-color); color: white; font-weight: 500; transition: 0.3s; border: 2px solid var(--primary-color); }
+        .hero .btn-get-started-alt:hover { background: transparent; color: var(--primary-color); }
+        .hero .btn-watch-video { font-size: 16px; margin-left: 20px; color: var(--secondary-color); font-weight: 500; transition: 0.3s; padding: 12px 30px; border: 2px solid #ddd; border-radius: 50px; }
+        .hero-stats { margin-top: 40px; padding-bottom: 40px;}
+        .hero-stats h4 { font-size: 28px; font-weight: 700; color: var(--primary-color); margin-bottom: 0;}
+        .hero-stats p { font-size: 14px; margin-bottom: 0; color: #777;}
+        .hero-features { display: flex; gap: 20px; font-size: 14px; margin-top: 30px;}
+        .hero-features i { color: var(--primary-color); margin-right: 5px; }
+
+        .hero-img { position: relative; border-radius: 20px; overflow: hidden; box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
+        .hero-img img { width: 100%; height: auto; }
+        .floating-badge { position: absolute; background: white; padding: 15px; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 15px; z-index: 2;}
+        .fb-1 { bottom: 40px; left: -30px; }
+        .fb-2 { top: 40px; right: -30px; }
+        .fb-icon { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #f3f5fa; color: var(--primary-color); font-size: 20px; }
+        .fb-text h6 { margin: 0; font-size: 15px; font-weight: 700;}
+        .fb-text p { margin: 0; font-size: 12px; color: #777;}
+
+        /* Common Section */
+        .section-title { text-align: center; padding-bottom: 40px; position: relative;}
+        .section-title h2 { font-size: 32px; font-weight: 700; margin-bottom: 15px; position: relative; display: inline-block;}
+        .section-title h2::before, .section-title h2::after { content: ""; position: absolute; top: 50%; width: 50px; height: 2px; background: var(--primary-color); transform: translateY(-50%); }
+        .section-title h2::before { left: -70px; }
+        .section-title h2::after { right: -70px; }
+        .section-title p { margin-bottom: 0; font-size: 15px; color: #555; }
+
+        /* Featured Courses */
+        .course-card { border: 1px solid #eee; border-radius: 15px; overflow: hidden; transition: 0.3s; height: 100%; display: flex; flex-direction: column;}
+        .course-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.08); }
+        .course-img { position: relative; }
+        .course-img img { width: 100%; height: 230px; object-fit: cover; }
+        .course-badge-top { position: absolute; top: 15px; left: 15px; padding: 5px 15px; border-radius: 4px; font-size: 12px; font-weight: 600; color: white; text-transform: uppercase;}
+        .bg-featured { background: #0d6efd; } .bg-new { background: #28a745; } .bg-cert { background: #ffc107; color: #000; } .bg-pop { background: #dc3545; }
+        .course-price-tag { position: absolute; top: 15px; right: 15px; width: 50px; height: 50px; background: rgba(0,0,0,0.7); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px;}
+        .course-content { padding: 25px; display: flex; flex-direction: column; flex-grow: 1;}
+        .course-tags { display: flex; gap: 10px; margin-bottom: 15px; font-size: 12px; font-weight: 500;}
+        .ct-level { background: #eef2fd; color: var(--primary-color); padding: 4px 12px; border-radius: 20px; }
+        .ct-weeks { background: #f8f9fa; color: #666; padding: 4px 12px; border-radius: 20px; border: 1px solid #eee;}
+        .course-card h3 { font-size: 20px; font-weight: 600; margin-bottom: 15px; line-height: 1.4;}
+        .course-card p { font-size: 14px; margin-bottom: 20px; flex-grow: 1;}
+        .course-instructor { display: flex; align-items: center; justify-content: space-between; padding-top: 15px; border-top: 1px solid #eee; margin-bottom: 20px;}
+        .course-instructor img { width: 40px; height: 40px; border-radius: 50%; }
+        .instructor-det h6 { margin: 0; font-size: 14px; font-weight: 600; }
+        .instructor-det p { margin: 0; font-size: 12px; color: #777;}
+        .course-footer { display: flex; justify-content: space-between; align-items: center; font-size: 13px; font-weight: 500; margin-bottom: 20px;}
+        .stars i { color: #ffc107; font-size: 12px;}
+        .course-content .btn { border-radius: 50px; font-weight: 500; font-size: 14px; padding: 10px; }
+
+        /* Categories */
+        .categories-section { padding: 80px 0; background: #fff; }
+        .category-item { text-align: center; margin-bottom: 30px; display: flex; flex-direction: column; align-items: center;}
+        .cat-icon { width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; color: white; margin-bottom: 15px; transition: 0.3s;}
+        .cat-item:hover .cat-icon { transform: scale(1.05); }
+        .category-item h4 { font-size: 16px; font-weight: 600; margin-bottom: 5px; }
+        .category-item p { font-size: 13px; color: #777; margin: 0; }
+        /* Distinct colors for icons */
+        .c-icon-1 { background-color: #4b6bfb; } .c-icon-2 { background-color: #27ae60; } .c-icon-3 { background-color: #9b59b6; } .c-icon-4 { background-color: #e74c3c; }
+        .c-icon-5 { background-color: #f39c12; } .c-icon-6 { background-color: #1abc9c; } .c-icon-7 { background-color: #34495e; } .c-icon-8 { background-color: #d35400; }
+        .c-icon-9 { background-color: #e84393; } .c-icon-10 { background-color: #00b894; } .c-icon-11 { background-color: #6c5ce7; } .c-icon-12 { background-color: #00cec9; }
+
+        /* Instructors */
+        .instructors-section { padding: 80px 0; background: #f9f9f9; }
+        .instructor-card { background: white; border-radius: 10px; overflow: hidden; text-align: center; border: 1px solid #eee; transition: 0.3s; }
+        .instructor-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.05);}
+        .instructor-card img { width: 100%; height: 260px; object-fit: cover; }
+        .instructor-card-body { padding: 25px 20px; }
+        .instructor-card h4 { font-size: 20px; font-weight: 600; margin-bottom: 5px;}
+        .instructor-role { color: var(--primary-color); font-size: 13px; font-weight: 500; text-transform: uppercase; margin-bottom: 15px; display: block;}
+        .instructor-card p { font-size: 14px; color: #666; margin-bottom: 20px; line-height: 1.6;}
+        .instructor-stats { display: flex; justify-content: center; gap: 30px; border-top: 1px solid #eee; border-bottom: 1px solid #eee; padding: 15px 0; margin-bottom: 20px;}
+        .instructor-stats div h5 { font-size: 18px; font-weight: 700; margin: 0; color: #222;}
+        .instructor-stats div span { font-size: 10px; font-weight: 600; color: #999; letter-spacing: 1px; text-transform: uppercase;}
+        .instructor-actions { display: flex; justify-content: space-between; align-items: center; }
+        .instructor-actions .btn { border-radius: 50px; font-size: 13px; font-weight: 600; padding: 8px 20px; }
+        .social-links a { color: #888; font-size: 16px; margin-left: 10px; transition: 0.3s; }
+        .social-links a:hover { color: var(--primary-color); }
+
+        /* Testimonials */
+        .testimonials-section { padding: 80px 0; }
+        .testimonial-card { border: 1px solid #eee; padding: 30px; border-radius: 10px; margin-bottom: 20px; background: #fff;}
+        .testimonial-stars { color: #ffc107; font-size: 14px; margin-bottom: 15px;}
+        .testimonial-card p { font-style: italic; font-size: 15px; line-height: 1.6; margin-bottom: 25px; color: #555;}
+        .testimonial-author { display: flex; align-items: center; gap: 15px; }
+        .testimonial-author img { width: 50px; height: 50px; border-radius: 50%; }
+        .testimonial-author h5 { font-size: 16px; font-weight: 600; margin: 0; }
+        .testimonial-author span { font-size: 13px; color: #888; }
+        .testimonial-quote { font-size: 40px; color: #e1e8f5; line-height: 0; margin-bottom: 10px; display: block;}
+        .overall-rating { text-align: center; margin-top: 50px; }
+        .overall-rating h2 { font-size: 48px; font-weight: 700; margin: 0;}
+        .rating-logos { display: flex; justify-content: center; gap: 15px; margin-top: 15px; }
+        .rating-logos span { background: #f1f4f9; padding: 8px 20px; border-radius: 50px; font-size: 13px; color: var(--primary-color); font-weight: 500;}
+
+        /* Blog */
+        .blog-section { padding: 80px 0; background: #f9f9f9; }
+        .blog-card { border: none; border-radius: 10px; overflow: hidden; background: #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .blog-card img.main-img { width: 100%; height: 220px; object-fit: cover; }
+        .blog-content { padding: 25px; }
+        .blog-meta { display: flex; justify-content: space-between; font-size: 13px; color: #777; margin-bottom: 15px; align-items: center;}
+        .bm-author { display: flex; align-items: center; gap: 10px; }
+        .bm-author img { width: 30px; height: 30px; border-radius: 50%; }
+        .blog-card h3 { font-size: 20px; font-weight: 600; line-height: 1.4; margin-bottom: 15px; }
+        .blog-card p { font-size: 14px; color: #666; margin-bottom: 0;}
+
+        /* Bottom CTA */
+        .cta-section { padding: 100px 0; }
+        .cta-content h2 { font-size: 36px; font-weight: 700; line-height: 1.3; margin-bottom: 20px; }
+        .cta-content p { font-size: 16px; margin-bottom: 30px; color: #555;}
+        .cta-list { list-style: none; padding: 0; margin-bottom: 35px;}
+        .cta-list li { margin-bottom: 15px; font-size: 15px; font-weight: 500; display: flex; align-items: center; }
+        .cta-list li i { color: var(--primary-color); margin-right: 15px; font-size: 18px; }
+        .cta-buttons .btn { border-radius: 50px; padding: 12px 30px; font-weight: 600; margin-right: 10px; font-size: 14px;}
+        .cta-stats { display: flex; gap: 40px; margin-top: 40px; }
+        .cta-stats h3 { font-size: 28px; font-weight: 700; color: var(--primary-color); margin-bottom: 5px;}
+        .cta-stats p { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: #444; margin: 0;}
+        .cta-video-box { position: relative; border-radius: 20px; overflow: hidden; box-shadow: 0 15px 30px rgba(0,0,0,0.1);}
+        .cta-video-box img { width: 100%; display: block; }
+        .play-btn { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 70px; height: 70px; background: var(--primary-color); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 5px 15px rgba(13, 110, 253, 0.4); text-decoration: none !important;}
+        .play-btn:hover { color: white; background: #0b5ed7;}
+        .cta-floating-badge { position: absolute; top: 30px; right: 30px; background: white; padding: 15px 25px; border-radius: 10px; display: flex; align-items: center; gap: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .cta-fb-icon { font-size: 24px; color: var(--primary-color); }
+
+        /* Footer */
+        .footer { background: var(--primary-color); color: rgba(255,255,255,0.8); padding: 80px 0 20px; margin-top: 50px;}
+        .footer .footer-brand { color: white !important; font-size: 32px; font-weight: 700; margin-bottom: 20px; display: block;}
+        .footer p { font-size: 14px; line-height: 1.6; margin-bottom: 25px; }
+        .footer-socials a { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border: 1px solid rgba(255,255,255,0.3); color: white; border-radius: 50%; margin-right: 10px; transition: 0.3s; }
+        .footer-socials a:hover { background: white; color: var(--primary-color); border-color: white;}
+        .footer h4 { color: white; font-size: 18px; font-weight: 600; margin-bottom: 25px;}
+        .footer-links { list-style: none; padding: 0; margin: 0; }
+        .footer-links li { margin-bottom: 12px; }
+        .footer-links a { color: rgba(255,255,255,0.8); font-size: 14px; transition: 0.3s; }
+        .footer-links a:hover { color: white; padding-left: 5px; }
+        .footer-contact p { font-size: 14px; margin-bottom: 10px; color: rgba(255,255,255,0.9); }
+        .footer-bottom { text-align: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; font-size: 13px; margin-top: 50px; }
+        .footer-bottom a { color: white; font-weight: 600; }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">Learner</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link active" href="#">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Courses</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Instructors</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Pricing</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Blog</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">More Pages</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Dropdown</a>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="#">Contact</a></li>
+                </ul>
+                <a href="#" class="btn-get-started">Enroll Now</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-5 mb-lg-0">
+                    <h1>Transform Your Future with Expert-Led Online Courses</h1>
+                    <p>Discover thousands of high-quality courses designed by industry professionals. Learn at your own pace, gain in-demand skills, and advance your career from anywhere in the world.</p>
+                    
+                    <div class="hero-stats d-flex gap-4">
+                        <div><h4>50000</h4><p>Students Enrolled</p></div>
+                        <div><h4>1200</h4><p>Expert Courses</p></div>
+                        <div><h4>98</h4><p>Success Rate %</p></div>
+                    </div>
+                    
+                    <div class="d-flex align-items-center mt-3">
+                        <a href="#" class="btn-get-started-alt">Browse Courses</a>
+                        <a href="#" class="btn-watch-video">Learn More</a>
+                    </div>
+                    
+                    <div class="hero-features">
+                        <span><i class="bi bi-check-circle"></i> Certified Programs</span>
+                        <span><i class="bi bi-clock"></i> Lifetime Access</span>
+                        <span><i class="bi bi-person-video3"></i> Expert Instructors</span>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6 position-relative text-center">
+                    <div class="hero-img d-inline-block">
+                        <!-- Placeholder using Unsplash image similar to the girl with headphones -->
+                        <img src="https://images.unsplash.com/photo-1516321497487-e288fb19713f?ixlib=rb-4.0.3&auto=format&fit=crop&w=700&q=80" alt="Hero Image">
+                        
+                        <div class="floating-badge fb-1">
+                            <div class="fb-icon"><i class="bi bi-graph-up-arrow"></i></div>
+                            <div class="fb-text"><h6>Digital Marketing</h6><p>3,200 Students</p></div>
+                        </div>
+                        <div class="floating-badge fb-2">
+                            <div class="fb-icon"><i class="bi bi-palette"></i></div>
+                            <div class="fb-text"><h6>UI/UX Design</h6><p>1,890 Students</p></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Courses -->
+    <section class="py-5" style="background:#f9fafc;">
+        <div class="container py-5">
+            <div class="section-title">
+                <h2>Featured Courses</h2>
+                <p>Necessitatibus eius consequatur ex aliquid fuga eum quidem sint consectetur velit</p>
+            </div>
+            
+            <div class="row g-4">
+                <!-- Course 1 -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="course-card bg-white">
+                        <div class="course-img">
+                            <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Course">
+                            <span class="course-badge-top bg-featured">FEATURED</span>
+                            <span class="course-price-tag">$149</span>
+                        </div>
+                        <div class="course-content">
+                            <div class="course-tags">
+                                <span class="ct-level">Beginner</span>
+                                <span class="ct-weeks">8 Weeks</span>
+                            </div>
+                            <h3>Digital Marketing Fundamentals</h3>
+                            <p>Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                            <div class="course-instructor">
+                                <div class="d-flex align-items-center gap-2">
+                                    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&auto=format&fit=facearea&facepad=2&w=100&h=100&q=80" alt="Instructor">
+                                    <div class="instructor-det"><h6>Sarah Johnson</h6><p>Marketing Expert</p></div>
+                                </div>
+                            </div>
+                            <div class="course-footer">
+                                <div class="stars">
+                                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i> (4.5)
+                                </div>
+                                <div><i class="bi bi-person"></i> 342 students</div>
+                            </div>
+                            <a href="#" class="btn btn-primary w-100">Enroll Now</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Course 2 -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="course-card bg-white">
+                        <div class="course-img">
+                            <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Course">
+                            <span class="course-badge-top bg-new">NEW</span>
+                            <span class="course-price-tag">$89</span>
+                        </div>
+                        <div class="course-content">
+                            <div class="course-tags">
+                                <span class="ct-level">Intermediate</span>
+                                <span class="ct-weeks">6 Weeks</span>
+                            </div>
+                            <h3>Web Development with JavaScript</h3>
+                            <p>Ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat duis aute irure.</p>
+                            <div class="course-instructor">
+                                <div class="d-flex align-items-center gap-2">
+                                    <img src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?ixlib=rb-4.0.3&auto=format&fit=facearea&facepad=2&w=100&h=100&q=80" alt="Instructor">
+                                    <div class="instructor-det"><h6>Michael Chen</h6><p>Full Stack Developer</p></div>
+                                </div>
+                            </div>
+                            <div class="course-footer">
+                                <div class="stars">
+                                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i> (5.0)
+                                </div>
+                                <div><i class="bi bi-person"></i> 156 students</div>
+                            </div>
+                            <a href="#" class="btn btn-primary w-100">Enroll Now</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Course 3 -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="course-card bg-white">
+                        <div class="course-img">
+                            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Course">
+                            <span class="course-badge-top bg-cert">CERTIFICATE</span>
+                            <span class="course-price-tag" style="font-size:14px;">Free</span>
+                        </div>
+                        <div class="course-content">
+                            <div class="course-tags">
+                                <span class="ct-level">Beginner</span>
+                                <span class="ct-weeks">4 Weeks</span>
+                            </div>
+                            <h3>Introduction to Data Science</h3>
+                            <p>Excepteur sint occaecat cupidatat non proident sunt in culpa qui officia deserunt mollit anim id est laborum sed ut perspiciatis.</p>
+                            <div class="course-instructor">
+                                <div class="d-flex align-items-center gap-2">
+                                    <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&auto=format&fit=facearea&facepad=2&w=100&h=100&q=80" alt="Instructor">
+                                    <div class="instructor-det"><h6>Dr. Emily Watson</h6><p>Data Scientist</p></div>
+                                </div>
+                            </div>
+                            <div class="course-footer">
+                                <div class="stars">
+                                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star"></i> (4.2)
+                                </div>
+                                <div><i class="bi bi-person"></i> 789 students</div>
+                            </div>
+                            <a href="#" class="btn btn-primary w-100">Enroll Now</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Course 4 -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="course-card bg-white">
+                        <div class="course-img">
+                            <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Course">
+                            <span class="course-badge-top bg-pop">POPULAR</span>
+                            <span class="course-price-tag">$199</span>
+                        </div>
+                        <div class="course-content">
+                            <div class="course-tags">
+                                <span class="ct-level">Advanced</span>
+                                <span class="ct-weeks">12 Weeks</span>
+                            </div>
+                            <h3>Business Strategy & Leadership</h3>
+                            <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium totam rem aperiam eaque.</p>
+                            <div class="course-instructor">
+                                <div class="d-flex align-items-center gap-2">
+                                    <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&auto=format&fit=facearea&facepad=2&w=100&h=100&q=80" alt="Instructor">
+                                    <div class="instructor-det"><h6>Robert Anderson</h6><p>Business Consultant</p></div>
+                                </div>
+                            </div>
+                            <div class="course-footer">
+                                <div class="stars">
+                                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i> (4.7)
+                                </div>
+                                <div><i class="bi bi-person"></i> 234 students</div>
+                            </div>
+                            <a href="#" class="btn btn-primary w-100">Enroll Now</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Course 5 -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="course-card bg-white">
+                        <div class="course-img">
+                            <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Course">
+                            <span class="course-badge-top bg-cert">CERTIFICATE</span>
+                            <span class="course-price-tag">$129</span>
+                        </div>
+                        <div class="course-content">
+                            <div class="course-tags">
+                                <span class="ct-level">Intermediate</span>
+                                <span class="ct-weeks">10 Weeks</span>
+                            </div>
+                            <h3>Graphic Design Masterclass</h3>
+                            <p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit sed quia consequuntur magni dolores eos.</p>
+                            <div class="course-instructor">
+                                <div class="d-flex align-items-center gap-2">
+                                    <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&auto=format&fit=facearea&facepad=2&w=100&h=100&q=80" alt="Instructor">
+                                    <div class="instructor-det"><h6>Lisa Martinez</h6><p>Creative Director</p></div>
+                                </div>
+                            </div>
+                            <div class="course-footer">
+                                <div class="stars">
+                                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i> (4.3)
+                                </div>
+                                <div><i class="bi bi-person"></i> 467 students</div>
+                            </div>
+                            <a href="#" class="btn btn-primary w-100">Enroll Now</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Course 6 -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="course-card bg-white">
+                        <div class="course-img">
+                            <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Course">
+                            <span class="course-badge-top bg-new">NEW</span>
+                            <span class="course-price-tag">$99</span>
+                        </div>
+                        <div class="course-content">
+                            <div class="course-tags">
+                                <span class="ct-level">Beginner</span>
+                                <span class="ct-weeks">5 Weeks</span>
+                            </div>
+                            <h3>Photography for Beginners</h3>
+                            <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque quos.</p>
+                            <div class="course-instructor">
+                                <div class="d-flex align-items-center gap-2">
+                                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=facearea&facepad=2&w=100&h=100&q=80" alt="Instructor">
+                                    <div class="instructor-det"><h6>James Wilson</h6><p>Professional Photographer</p></div>
+                                </div>
+                            </div>
+                            <div class="course-footer">
+                                <div class="stars">
+                                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i> (4.6)
+                                </div>
+                                <div><i class="bi bi-person"></i> 298 students</div>
+                            </div>
+                            <a href="#" class="btn btn-primary w-100">Enroll Now</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-5">
+                <a href="#" class="btn btn-outline-primary" style="border-radius:50px; padding: 12px 30px; font-weight:600;">View All Courses</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Course Categories -->
+    <section class="categories-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Course Categories</h2>
+                <p>Necessitatibus eius consequatur ex aliquid fuga eum quidem sint consectetur velit</p>
+            </div>
+            
+            <div class="row row-cols-2 row-cols-md-4 row-cols-lg-6 g-4 mt-2 justify-content-center">
+                <div class="col category-item"><div class="cat-icon c-icon-1"><i class="bi bi-laptop"></i></div><h4>Computer Science</h4><p>24 Courses</p></div>
+                <div class="col category-item"><div class="cat-icon c-icon-2"><i class="bi bi-briefcase"></i></div><h4>Business</h4><p>18 Courses</p></div>
+                <div class="col category-item"><div class="cat-icon c-icon-3"><i class="bi bi-palette"></i></div><h4>Design</h4><p>15 Courses</p></div>
+                <div class="col category-item"><div class="cat-icon c-icon-4"><i class="bi bi-heart-pulse"></i></div><h4>Health & Medical</h4><p>12 Courses</p></div>
+                <div class="col category-item"><div class="cat-icon c-icon-5"><i class="bi bi-globe"></i></div><h4>Languages</h4><p>21 Courses</p></div>
+                <div class="col category-item"><div class="cat-icon c-icon-6"><i class="bi bi-journal-code"></i></div><h4>Science</h4><p>16 Courses</p></div>
+                
+                <div class="col category-item"><div class="cat-icon c-icon-7"><i class="bi bi-megaphone"></i></div><h4>Marketing</h4><p>19 Courses</p></div>
+                <div class="col category-item"><div class="cat-icon c-icon-8"><i class="bi bi-graph-up"></i></div><h4>Finance</h4><p>14 Courses</p></div>
+                <div class="col category-item"><div class="cat-icon c-icon-9"><i class="bi bi-camera"></i></div><h4>Photography</h4><p>11 Courses</p></div>
+                <div class="col category-item"><div class="cat-icon c-icon-10"><i class="bi bi-music-note-beamed"></i></div><h4>Music</h4><p>13 Courses</p></div>
+                <div class="col category-item"><div class="cat-icon c-icon-11"><i class="bi bi-gear"></i></div><h4>Engineering</h4><p>22 Courses</p></div>
+                <div class="col category-item"><div class="cat-icon c-icon-12"><i class="bi bi-book"></i></div><h4>Law & Legal</h4><p>9 Courses</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Instructors -->
+    <section class="instructors-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Featured Instructors</h2>
+                <p>Necessitatibus eius consequatur ex aliquid fuga eum quidem sint consectetur velit</p>
+            </div>
+            
+            <div class="row g-4 mt-2">
+                <div class="col-lg-3 col-md-6">
+                    <div class="instructor-card">
+                        <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Instructor">
+                        <div class="instructor-card-body">
+                            <h4>Sarah Johnson</h4>
+                            <span class="instructor-role">Web Development</span>
+                            <p>Nulla facilisi morbi tempus iaculis urna id volutpat lacus laoreet non curabitur gravida.</p>
+                            <div class="instructor-stats">
+                                <div><h5>2.1k</h5><span>Students</span></div>
+                                <div><h5>4.8</h5><span>Rating</span></div>
+                            </div>
+                            <div class="instructor-actions">
+                                <a href="#" class="btn btn-primary">View Profile</a>
+                                <div class="social-links">
+                                    <a href="#"><i class="bi bi-linkedin"></i></a>
+                                    <a href="#"><i class="bi bi-twitter"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-6">
+                    <div class="instructor-card">
+                        <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Instructor">
+                        <div class="instructor-card-body">
+                            <h4>Michael Chen</h4>
+                            <span class="instructor-role">Data Science</span>
+                            <p>Suspendisse potenti nullam ac tortor vitae purus faucibus ornare suspendisse sed nisi.</p>
+                            <div class="instructor-stats">
+                                <div><h5>3.5k</h5><span>Students</span></div>
+                                <div><h5>4.9</h5><span>Rating</span></div>
+                            </div>
+                            <div class="instructor-actions">
+                                <a href="#" class="btn btn-primary">View Profile</a>
+                                <div class="social-links">
+                                    <a href="#"><i class="bi bi-github"></i></a>
+                                    <a href="#"><i class="bi bi-linkedin"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-6">
+                    <div class="instructor-card">
+                        <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Instructor">
+                        <div class="instructor-card-body">
+                            <h4>Amanda Rodriguez</h4>
+                            <span class="instructor-role">UX Design</span>
+                            <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis.</p>
+                            <div class="instructor-stats">
+                                <div><h5>1.8k</h5><span>Students</span></div>
+                                <div><h5>4.6</h5><span>Rating</span></div>
+                            </div>
+                            <div class="instructor-actions">
+                                <a href="#" class="btn btn-primary">View Profile</a>
+                                <div class="social-links">
+                                    <a href="#"><i class="bi bi-dribbble"></i></a>
+                                    <a href="#"><i class="bi bi-behance"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-6">
+                    <div class="instructor-card">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Instructor">
+                        <div class="instructor-card-body">
+                            <h4>David Thompson</h4>
+                            <span class="instructor-role">Digital Marketing</span>
+                            <p>Vivamus magna justo lacinia eget consectetur sed convallis at tellus curabitur non nulla.</p>
+                            <div class="instructor-stats">
+                                <div><h5>2.9k</h5><span>Students</span></div>
+                                <div><h5>4.7</h5><span>Rating</span></div>
+                            </div>
+                            <div class="instructor-actions">
+                                <a href="#" class="btn btn-primary">View Profile</a>
+                                <div class="social-links">
+                                    <a href="#"><i class="bi bi-instagram"></i></a>
+                                    <a href="#"><i class="bi bi-facebook"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Testimonials</h2>
+                <p>Necessitatibus eius consequatur ex aliquid fuga eum quidem sint consectetur velit</p>
+            </div>
+            
+            <div class="row g-4 align-items-center">
+                <!-- Testimonials Grid -->
+                <div class="col-lg-12">
+                    <div class="row g-4">
+                        <div class="col-md-4">
+                            <div class="testimonial-card">
+                                <i class="bi bi-quote testimonial-quote"></i>
+                                <div class="testimonial-stars"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i></div>
+                                <p>Pellentesque in ipsum id orci porta dapibus. Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus.</p>
+                                <div class="testimonial-author">
+                                    <img src="https://ui-avatars.com/api/?name=NY+Times&background=random" alt="Author">
+                                    <div><h5>The New York Times</h5></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="testimonial-card">
+                                <i class="bi bi-quote testimonial-quote"></i>
+                                <div class="testimonial-stars"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i></div>
+                                <p>Curabitur non nulla sit amet nisl tempus convallis quis ac lectus. Nulla quis lorem ut libero malesuada feugiat.</p>
+                                <div class="testimonial-author">
+                                    <img src="https://ui-avatars.com/api/?name=W+P&background=random" alt="Author">
+                                    <div><h5>Washington Post</h5></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="testimonial-card">
+                                <i class="bi bi-quote testimonial-quote"></i>
+                                <div class="testimonial-stars"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i></div>
+                                <p>Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a. Vivamus suscipit tortor eget felis porttitor volutpat.</p>
+                                <div class="testimonial-author">
+                                    <img src="https://ui-avatars.com/api/?name=T+G&background=random" alt="Author">
+                                    <div><h5>The Guardian</h5></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Overall Rating -->
+                <div class="col-lg-12">
+                    <div class="overall-rating">
+                        <h2>4.8</h2>
+                        <div class="testimonial-stars" style="font-size:24px; margin: 10px 0;"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i></div>
+                        <p style="color:#777; font-size: 15px;">Based on 230+ reviews</p>
+                        <div class="rating-logos">
+                            <span>Goodreads</span>
+                            <span>Amazon</span>
+                            <span>Barnes & Noble</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Recent Blog Posts -->
+    <section class="blog-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Recent Blog Posts</h2>
+                <p>Necessitatibus eius consequatur ex aliquid fuga eum quidem sint consectetur velit</p>
+            </div>
+            
+            <div class="row g-4 mt-2">
+                <div class="col-lg-4 col-md-6">
+                    <div class="blog-card h-100">
+                        <div class="p-3">
+                            <div class="blog-meta">
+                                <div class="bm-author">
+                                    <img src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=facearea&facepad=2&w=80&h=80&q=80" alt="Author">
+                                    <span>By Andy glamer</span>
+                                </div>
+                                <span><i class="bi bi-heart" style="color:var(--primary-color);"></i> 65</span>
+                            </div>
+                        </div>
+                        <img src="https://images.unsplash.com/photo-1516321497487-e288fb19713f?auto=format&fit=crop&w=600&q=80" class="main-img" alt="Blog Post">
+                        <div class="blog-content">
+                            <h3>Sed ut perspiciatis unde omnis iste natus</h3>
+                            <p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6">
+                    <div class="blog-card h-100">
+                        <div class="p-3">
+                            <div class="blog-meta">
+                                <div class="bm-author">
+                                    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=facearea&facepad=2&w=80&h=80&q=80" alt="Author">
+                                    <span>By Den vilamson</span>
+                                </div>
+                                <span><i class="bi bi-heart" style="color:var(--primary-color);"></i> 35</span>
+                            </div>
+                        </div>
+                        <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=600&q=80" class="main-img" alt="Blog Post">
+                        <div class="blog-content">
+                            <h3>Nemo enim ipsam voluptatem quia voluptas sit</h3>
+                            <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6">
+                    <div class="blog-card h-100">
+                        <div class="p-3">
+                            <div class="blog-meta">
+                                <div class="bm-author">
+                                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=facearea&facepad=2&w=80&h=80&q=80" alt="Author">
+                                    <span>By Jones robbert</span>
+                                </div>
+                                <span><i class="bi bi-heart" style="color:var(--primary-color);"></i> 58</span>
+                            </div>
+                        </div>
+                        <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=600&q=80" class="main-img" alt="Blog Post">
+                        <div class="blog-content">
+                            <h3>Ut enim ad minima veniam, quis nostrum exercitationem</h3>
+                            <p>Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bottom CTA -->
+    <section class="cta-section" style="background:var(--light-bg);">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 pe-lg-5">
+                    <div class="cta-content">
+                        <h2>Transform Your Future with Expert-Led Online Courses</h2>
+                        <p>Join thousands of successful learners who have advanced their careers through our comprehensive online education platform.</p>
+                        
+                        <ul class="cta-list">
+                            <li><i class="bi bi-check-circle-fill"></i> 20+ Expert instructors with industry experience</li>
+                            <li><i class="bi bi-check-circle-fill"></i> Certificate of completion for every course</li>
+                            <li><i class="bi bi-check-circle-fill"></i> 24/7 access to course materials and resources</li>
+                            <li><i class="bi bi-check-circle-fill"></i> Interactive assignments and real-world projects</li>
+                        </ul>
+                        
+                        <div class="cta-buttons mb-4">
+                            <a href="#" class="btn btn-primary">BROWSE COURSES</a>
+                            <a href="#" class="btn btn-outline-primary" style="background:transparent; color:var(--primary-color); border:2px solid var(--primary-color);">ENROLL NOW</a>
+                        </div>
+                        
+                        <div class="cta-stats">
+                            <div><h3>15000+</h3><p>Students Enrolled</p></div>
+                            <div><h3>150+</h3><p>Courses Available</p></div>
+                            <div><h3>98%</h3><p>Success Rate</p></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 mt-5 mt-lg-0">
+                    <div class="cta-video-box">
+                        <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Video Cover">
+                        <a href="#" class="play-btn"><i class="bi bi-play-fill"></i></a>
+                        
+                        <div class="cta-floating-badge">
+                            <i class="bi bi-people-fill cta-fb-icon"></i>
+                            <div><h4 class="m-0 fw-bold" style="font-size:18px;">2,450</h4><p class="m-0 text-muted" style="font-size:12px;">New Students This Month</p></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6">
+                    <a href="#" class="footer-brand">Learner</a>
+                    <p>Cras fermentum odio eu feugiat lide par naso tierra. Justo eget nada terra videa magna derita valies darta donna mare fermentum iaculis eu non diam phasellus.</p>
+                    <div class="footer-socials">
+                        <a href="#"><i class="bi bi-twitter"></i></a>
+                        <a href="#"><i class="bi bi-facebook"></i></a>
+                        <a href="#"><i class="bi bi-instagram"></i></a>
+                        <a href="#"><i class="bi bi-linkedin"></i></a>
+                    </div>
+                </div>
+                
+                <div class="col-lg-2 col-md-6">
+                    <h4>Useful Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">About us</a></li>
+                        <li><a href="#">Services</a></li>
+                        <li><a href="#">Terms of service</a></li>
+                        <li><a href="#">Privacy policy</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-2 col-md-6">
+                    <h4>Our Services</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Web Design</a></li>
+                        <li><a href="#">Web Development</a></li>
+                        <li><a href="#">Product Management</a></li>
+                        <li><a href="#">Marketing</a></li>
+                        <li><a href="#">Graphic Design</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 footer-contact">
+                    <h4>Contact Us</h4>
+                    <p>A108 Adam Street<br>New York, NY 535022<br>United States</p>
+                    <p class="mt-4"><strong>Phone:</strong> +1 5589 55488 55<br><strong>Email:</strong> info@example.com</p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p class="mb-0">&copy; Copyright <strong>Learner</strong>. All Rights Reserved<br>
+                Designed by <a href="#">BootstrapMade</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
